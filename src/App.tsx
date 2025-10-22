@@ -6,7 +6,7 @@ import ZoomGallery from './components/ZoomGallery'
 import Timeline from './components/Timeline'
 
 // Prefix any local asset path with the correct base (works on GitHub Pages)
-const withBase = (path: string) =>
+const withBase = (path: string): string =>
   path.startsWith('http')
     ? path
     : new URL(path.replace(/^\//, ''), import.meta.env.BASE_URL).href
