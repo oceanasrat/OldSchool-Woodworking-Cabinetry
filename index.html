@@ -1,20 +1,57 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#FAF7F2" />
-    <meta name="description" content="Bespoke cabinetry & furniture — artisan portfolio" />
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>My Website</title>
+  <meta name="description" content="My simple site on GitHub Pages." />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/favicon.png">
+  <!-- Favicon (optional) -->
+  <!-- <link rel="icon" href="images/favicon.png" /> -->
 
-    <title>Old School Woodworking</title>
-  </head>
-  <body class="bg-background text-foreground antialiased">
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Header with logo -->
+  <header class="site-header">
+    <!-- RELATIVE PATH (recommended): works on GitHub Pages and locally -->
+    <a class="brand" href="./">
+      <img
+        src="images/logo.png"   <!-- change to your real file name, e.g., logo.svg / logo.jpg -->
+        alt="My Brand"
+        class="logo"
+      />
+      <span class="brand-name">My Brand</span>
+    </a>
+
+    <!-- If you prefer ABSOLUTE URL instead, replace the <img> above with this one:
+    <img
+      src="https://YOUR_USERNAME.github.io/YOUR_REPO/images/logo.png"
+      alt="My Brand"
+      class="logo"
+    />
+    -->
+  </header>
+
+  <main class="container">
+    <h1>Welcome!</h1>
+    <p>This site is hosted on GitHub Pages. The logo above is loaded from the repository’s <code>images/</code> folder.</p>
+
+    <h2>What to change next</h2>
+    <ul>
+      <li>Replace <code>images/logo.png</code> with your real logo (PNG/JPG/SVG).</li>
+      <li>Edit this text to your content.</li>
+      <li>Adjust sizes and spacing in <code>styles.css</code>.</li>
+    </ul>
+  </main>
+
+  <footer class="site-footer">
+    <small>&copy; <span id="year"></span> My Brand</small>
+  </footer>
+
+  <script>
+    // update footer year automatically
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
 </html>
