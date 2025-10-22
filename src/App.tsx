@@ -1,7 +1,9 @@
 import React, { useMemo, useState } from 'react'
 import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, ChevronRight, Star, Quote } from 'lucide-react'
 import { useData } from './lib/data'
-import SmartEstimator from './components/SmartEstimator'   // ← NEW
+import SmartEstimator from './components/SmartEstimator'
+import ZoomGallery from './components/ZoomGallery'
+import Timeline from './components/Timeline'
 
 function Stars({ count=5 }: { count?: number }) {
   return (
@@ -11,19 +13,13 @@ function Stars({ count=5 }: { count?: number }) {
   )
 }
 
-function Modal({
-  open,
-  onClose,
-  children,
-}: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+/* Mobile-friendly modal (full-height sheet on phones) */
+function Modal({ open, onClose, children }:{ open:boolean; onClose:()=>void; children:React.ReactNode }) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50">
-      {/* dim background */}
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      {/* sheet container */}
       <div className="absolute inset-x-0 top-0 bottom-0 sm:inset-y-10 sm:mx-auto sm:max-w-4xl">
-        {/* content: full-height on mobile, auto on desktop */}
         <div className="h-[100dvh] sm:h-auto bg-surface border border-border shadow-soft rounded-none sm:rounded-2xl overflow-auto">
           <div className="p-4 sm:p-6">{children}</div>
         </div>
@@ -32,19 +28,17 @@ function Modal({
   )
 }
 
-
 export default function App(){
   const { site, projects, testimonials, blog } = useData()
   const [query,setQuery] = useState('')
-  const [category,setCategory] = useState<'All'|'Cabinets'|'Furniture'|'Built-ins'>('All')
+  const [category,setCategory] = useState<'All'|'Kitchens'|'Bathrooms'|'Mudrooms'|'Laundry'|'Closets'|'Furniture'>('All')
   const [material,setMaterial] = useState<'All'|'Walnut'|'Oak'|'Ash'|'Maple'>('All')
   const [viewer,setViewer] = useState<{title:string,images:string[]} | null>(null)
 
-  // NEW — estimator state
   const [showEstimator, setShowEstimator] = useState(false)
-  const [estimateSummary, setEstimateSummary] = useState('')   // prefills the contact form
+  const [estimateSummary, setEstimateSummary] = useState('')
 
-  const CATEGORIES = ['All','Cabinets','Furniture','Built-ins'] as const
+  const CATEGORIES = ['All','Kitchens','Bathrooms','Mudrooms','Laundry','Closets','Furniture'] as const
   const MATERIALS = ['All','Walnut','Oak','Ash','Maple'] as const
 
   const filtered = useMemo(()=>(
@@ -60,18 +54,19 @@ export default function App(){
       {/* Top bar */}
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border">
         <div className="container-max py-3 flex items-center justify-between">
-          <a href="#" className="flex items-center gap-2 font-semibold">
-            <Hammer className="w-5 h-5" /> {site.name}
+          <a href="#" className="flex items-center gap-3 font-semibold">
+            <img src="/logo.svg" alt="Old School Woodworking" className="h-7 w-auto" />
+            <span className="hidden sm:inline text-brand">Old School Woodworking</span>
           </a>
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#portfolio" className="hover:underline">Portfolio</a>
             <a href="#case-studies" className="hover:underline">Case Studies</a>
-            <a href="#about" className="hover:underline">About</a>
+            <a href="#about" className="hover:underline">Story</a>
             <a href="#testimonials" className="hover:underline">Reviews</a>
             <a href="#blog" className="hover:underline">Blog</a>
           </nav>
           <div className="flex items-center gap-2">
-            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button> {/* ← NEW */}
+            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button>
             <a className="btn-primary rounded-2xl" href="#contact">Get a Quote</a>
           </div>
         </div>
@@ -80,12 +75,12 @@ export default function App(){
       {/* Hero */}
       <section className="section grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight">{site.tagline}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-brand">{site.tagline}</h1>
           <p className="mt-4 subtle max-w-xl">
             Handcrafted pieces tailored to your space. We design, build, and install cabinetry, furniture, and built-ins with premium materials and traditional joinery.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button> {/* ← NEW */}
+            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button>
             <a href="#portfolio" className="btn-primary rounded-2xl">View Portfolio</a>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted">
@@ -104,7 +99,7 @@ export default function App(){
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <h2 className="heading">Portfolio</h2>
-            <p className="subtle">Filter by project type, material, or search by name.</p>
+            <p className="subtle">Filter by room type, material, or search by name.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <input className="input w-56" placeholder="Search projects…" value={query} onChange={(e)=>setQuery(e.target.value)} />
@@ -141,6 +136,19 @@ export default function App(){
         </div>
       </section>
 
+      {/* Testimonial stripe */}
+      <section className="section pt-6">
+        <div className="subtle text-sm mb-2">What clients say</div>
+        <div className="flex gap-4 overflow-x-auto snap-x">
+          {testimonials.map((t,i)=>(
+            <div key={i} className="card p-4 min-w-[260px] snap-start">
+              <div className="font-semibold">{t.name}</div>
+              <p className="subtle mt-1">{t.quote}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {/* Case Studies */}
       <section id="case-studies" className="bg-white/60 border-y border-border">
         <div className="section">
@@ -155,13 +163,13 @@ export default function App(){
                 </div>
                 <p className="subtle mt-1">{p.blurb}</p>
                 <details className="mt-3"><summary className="cursor-pointer">Materials & Hardware</summary>
-                  <p className="subtle mt-2">Premium {(p as any).material?.toLowerCase?.() || 'wood'}, FSC-certified plywood, soft-close hinges, and hidden leveling feet.</p>
+                  <p className="subtle mt-2">Premium {(p as any).material?.toLowerCase?.() || 'wood'}, FSC-certified plywood, soft-close hinges, hidden leveling feet.</p>
                 </details>
                 <details className="mt-2"><summary className="cursor-pointer">Techniques</summary>
-                  <p className="subtle mt-2">Mortise-and-tenon joinery, precise edge-banding, spray booth finishing, and on-site scribing for a perfect fit.</p>
+                  <p className="subtle mt-2">Mortise-and-tenon joinery, precise edge-banding, spray booth finishing, on-site scribing.</p>
                 </details>
                 <details className="mt-2"><summary className="cursor-pointer">Process</summary>
-                  <p className="subtle mt-2">From sketch to install: concept moodboard, 3D drawings, shop build with QA photos, delivery & clean install.</p>
+                  <p className="subtle mt-2">From sketch to install: moodboard, Mozaik drawings, shop build with QA photos, delivery & install.</p>
                 </details>
               </div>
             ))}
@@ -169,24 +177,31 @@ export default function App(){
         </div>
       </section>
 
-      {/* About */}
-      <section id="about" className="section grid lg:grid-cols-2 gap-8 items-center">
-        <div>
-          <h2 className="heading">Our Story</h2>
-          <p className="subtle mt-3 max-w-prose">
-            We’re a small workshop building functional, honest furniture and cabinetry. Every piece is made to order. We blend time-tested methods with modern tooling.
-          </p>
-          <div className="mt-5 grid sm:grid-cols-2 gap-3">
-            <div className="card p-4"><div className="font-semibold text-base">Values</div><div className="subtle">Craft, transparency, and kindness.</div></div>
-            <div className="card p-4"><div className="font-semibold text-base">Guarantee</div><div className="subtle">Two-year workmanship warranty.</div></div>
+      {/* Parallax band (upload /images/wood.jpg) */}
+      <section className="h-56 md:h-72 bg-[url('/images/wood.jpg')] bg-cover bg-center bg-fixed" aria-hidden="true" />
+
+      {/* Story + Timeline */}
+      <section id="about" className="section">
+        <div className="grid lg:grid-cols-2 gap-8 items-start">
+          <div>
+            <h2 className="heading">The Craftsman Story</h2>
+            <p className="subtle mt-3 max-w-prose">
+              Old School Woodworking is a small, family shop in Texas. We build pieces to last —
+              carefully selected lumber, honest joinery, and finishes you can live with.
+            </p>
+            <div className="mt-5 grid sm:grid-cols-2 gap-3">
+              <div className="card p-4"><div className="font-semibold text-base text-brand">Values</div><div className="subtle">Craft, transparency, kindness.</div></div>
+              <div className="card p-4"><div className="font-semibold text-base text-brand">Guarantee</div><div className="subtle">2-year workmanship warranty.</div></div>
+            </div>
           </div>
-        </div>
-        <div className="aspect-[4/3] rounded-2xl bg-surface border border-border grid place-items-center">
-          <ImageIcon className="w-12 h-12 opacity-30" />
+          <div className="card p-5">
+            <h3 className="font-semibold mb-3">How We Work</h3>
+            <Timeline />
+          </div>
         </div>
       </section>
 
-      {/* Testimonials */}
+      {/* Testimonials grid */}
       <section id="testimonials" className="bg-white/60 border-y border-border">
         <div className="section">
           <h2 className="heading">Client Reviews</h2>
@@ -229,13 +244,12 @@ export default function App(){
         </div>
       </section>
 
-      {/* Contact */}
+      {/* Contact / Free consultation */}
       <section id="contact" className="section grid lg:grid-cols-2 gap-10 items-start">
         <div>
-          <h2 className="heading">Request a Quote</h2>
+          <h2 className="heading">Request a Free Consultation</h2>
           <p className="subtle">Tell us about your project. We usually reply within one business day.</p>
 
-          {/* NEW — show the captured estimator summary in the form */}
           {estimateSummary && (
             <div className="card p-4 mb-4">
               <div className="text-sm subtle mb-2">AI Estimate summary (you can edit before sending):</div>
@@ -258,10 +272,27 @@ export default function App(){
               <input className="input" name="phone" placeholder="Phone (optional)" />
               <input className="input" name="city" placeholder="City" />
             </div>
+
+            {/* dropdowns */}
+            <div className="grid sm:grid-cols-3 gap-4">
+              <select className="input" name="project_type" defaultValue="Kitchens">
+                {['Kitchens','Bathrooms','Mudrooms','Laundry','Closets','Furniture'].map(x=> <option key={x}>{x}</option>)}
+              </select>
+              <select className="input" name="budget" defaultValue="$10k–$20k">
+                {['<$5k','$5k–$10k','$10k–$20k','$20k–$40k','$40k+'].map(x=> <option key={x}>{x}</option>)}
+              </select>
+              <select className="input" name="timeline" defaultValue="Flexible">
+                {['ASAP (4–6 weeks)','Soon (2–3 months)','Flexible'].map(x=> <option key={x}>{x}</option>)}
+              </select>
+            </div>
+
+            <input className="input" name="mozaik_link" placeholder="Link to Mozaik files (Drive/Dropbox)" />
+
             <select className="input" name="service">
               {site.services.map((s:string) => <option key={s}>{s}</option>)}
             </select>
-            <textarea required className="textarea min-h-[120px]" name="details" placeholder="Describe your project, dimensions, timeline, budget range…"></textarea>
+            <textarea required className="textarea min-h-[120px]" name="details"
+              placeholder="Describe your project, dimensions, finishes, timeline, budget range…"></textarea>
             <div className="flex items-center justify-between">
               <div className="subtle">Prefer a quick ballpark? Try the “Free AI Estimate”.</div>
               <button className="btn-primary rounded-2xl">Send Request</button>
@@ -271,7 +302,7 @@ export default function App(){
         <div className="card p-5 grid gap-3 text-sm text-muted">
           <div className="text-foreground font-semibold text-base">Why clients choose us</div>
           <div>• Transparent pricing & schedule</div>
-          <div>• Design support with drawings</div>
+          <div>• Mozaik 3D design support</div>
           <div>• Workmanship warranty</div>
           <div>• Insured & background-checked</div>
         </div>
@@ -286,7 +317,7 @@ export default function App(){
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-1 gap-3">
             <a href="#portfolio" className="hover:underline">Portfolio</a>
-            <a href="#about" className="hover:underline">About</a>
+            <a href="#about" className="hover:underline">Story</a>
             <a href="#blog" className="hover:underline">Blog</a>
             <a href="#contact" className="hover:underline">Get a Quote</a>
           </div>
@@ -298,26 +329,18 @@ export default function App(){
         </div>
       </footer>
 
-      {/* Photo viewer modal (existing) */}
+      {/* Photo viewer → ZoomGallery */}
       <Modal open={!!viewer} onClose={()=>setViewer(null)}>
-        <div className="font-semibold text-lg mb-3">{viewer?.title}</div>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {viewer?.images.map((_,i)=>(
-            <div key={i} className="aspect-video rounded-lg bg-black/5 grid place-items-center">
-              <span className="subtle">Image {i+1}</span>
-            </div>
-          ))}
-        </div>
+        {viewer && <ZoomGallery title={viewer.title} images={viewer.images} />}
       </Modal>
 
-      {/* NEW — Estimator modal */}
+      {/* Estimator modal */}
       <Modal open={showEstimator} onClose={()=>setShowEstimator(false)}>
         <SmartEstimator
           onClose={()=>setShowEstimator(false)}
           onUse={(summary) => {
             setEstimateSummary(summary)
             setShowEstimator(false)
-            // Scroll to the contact form for convenience
             const el = document.getElementById('contact')
             if (el) el.scrollIntoView({ behavior: 'smooth' })
           }}
