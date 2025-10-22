@@ -25,6 +25,7 @@ export default function App(){
   const [category,setCategory] = useState<'All'|'Cabinets'|'Furniture'|'Built-ins'>('All')
   const [material,setMaterial] = useState<'All'|'Walnut'|'Oak'|'Ash'|'Maple'>('All')
   const [viewer,setViewer] = useState<{title:string,images:string[]} | null>(null)
+
   const CATEGORIES = ['All','Cabinets','Furniture','Built-ins'] as const
   const MATERIALS = ['All','Walnut','Oak','Ash','Maple'] as const
 
@@ -68,13 +69,13 @@ export default function App(){
             <a href="#portfolio" className="btn-primary rounded-2xl">View Portfolio</a>
             <a href="#contact" className="btn-outline rounded-2xl">Request a Quote</a>
           </div>
-          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
+          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted">
             <div className="flex items-center gap-2"><Phone className="w-4 h-4" />{site.phone}</div>
             <div className="flex items-center gap-2"><Mail className="w-4 h-4" />{site.email}</div>
             <div className="flex items-center gap-2"><MapPin className="w-4 h-4" />{site.city}</div>
           </div>
         </div>
-        <div className="relative aspect-[4/3] rounded-2xl bg-white overflow-hidden border border-border shadow-soft grid place-items-center">
+        <div className="relative aspect-[4/3] rounded-2xl bg-surface overflow-hidden border border-border shadow-soft grid place-items-center">
           <ImageIcon className="w-12 h-12 opacity-30" />
         </div>
       </section>
@@ -122,7 +123,7 @@ export default function App(){
       </section>
 
       {/* Case Studies */}
-      <section id="case-studies" className="bg-white/50 border-y border-border">
+      <section id="case-studies" className="bg-white/60 border-y border-border">
         <div className="section">
           <h2 className="heading">Case Studies</h2>
           <p className="subtle">Story-driven breakdowns of featured builds.</p>
@@ -161,13 +162,13 @@ export default function App(){
             <div className="card p-4"><div className="font-semibold text-base">Guarantee</div><div className="subtle">Two-year workmanship warranty.</div></div>
           </div>
         </div>
-        <div className="aspect-[4/3] rounded-2xl bg-white border border-border grid place-items-center">
+        <div className="aspect-[4/3] rounded-2xl bg-surface border border-border grid place-items-center">
           <ImageIcon className="w-12 h-12 opacity-30" />
         </div>
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="bg-white/50 border-y border-border">
+      <section id="testimonials" className="bg-white/60 border-y border-border">
         <div className="section">
           <h2 className="heading">Client Reviews</h2>
           <div className="mt-6 grid md:grid-cols-3 gap-6">
@@ -234,7 +235,7 @@ export default function App(){
             </div>
           </form>
         </div>
-        <div className="card p-5 grid gap-3 text-sm text-muted-foreground">
+        <div className="card p-5 grid gap-3 text-sm text-muted">
           <div className="text-foreground font-semibold text-base">Why clients choose us</div>
           <div>• Transparent pricing & schedule</div>
           <div>• Design support with drawings</div>
@@ -244,7 +245,7 @@ export default function App(){
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-white/60">
+      <footer className="border-t border-border bg-white/70">
         <div className="section grid md:grid-cols-3 gap-6 text-sm">
           <div>
             <div className="font-semibold flex items-center gap-2"><Hammer className="w-4 h-4" /> {site.name}</div>
@@ -256,7 +257,7 @@ export default function App(){
             <a href="#blog" className="hover:underline">Blog</a>
             <a href="#contact" className="hover:underline">Get a Quote</a>
           </div>
-          <div className="text-muted-foreground">
+          <div className="text-muted">
             <div className="flex items-center gap-2"><Phone className="w-4 h-4" />{site.phone}</div>
             <div className="flex items-center gap-2"><Mail className="w-4 h-4" />{site.email}</div>
             <div className="flex items-center gap-2"><MapPin className="w-4 h-4" />{site.city}</div>
