@@ -1,0 +1,55 @@
+/* Basic reset */
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+/* Page frame */
+body {
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: #1f2937;              /* charcoal */
+  background: #faf7f2;         /* warm cream */
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(250, 247, 242, 0.9);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.site-header .brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo {
+  height: 40px;       /* change this to control logo size */
+  width: auto;        /* keeps aspect ratio */
+  display: block;
+}
+
+/* Hide text brand on very small screens if you want */
+@media (max-width: 420px) {
+  .brand-name { display: none; }
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 1rem;
+  text-align: center;
+  background: #ffffffb3;
+}
