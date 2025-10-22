@@ -1,2 +1,16 @@
-/* basic placeholder so the import exists */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 html, body, #root { height: 100%; margin: 0; }
+:root{ --radius: 1rem; }
+.container-max { @apply mx-auto max-w-7xl px-4; }
+.card { @apply bg-neutral-900/50 border border-white/5 rounded-2xl shadow-lg; }
+.btn { @apply inline-flex items-center justify-center rounded-xl px-4 py-2 font-medium transition; }
+.btn-primary { @apply btn bg-yellow-500 text-black hover:brightness-110; }
+.btn-outline { @apply btn border border-white/20 hover:bg-white/5; }
+.badge { @apply inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs; }
+.input, .textarea, select { @apply w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2 outline-none focus:border-yellow-500; }
+.section { @apply container-max py-14; }
+.heading { @apply text-2xl md:text-3xl font-semibold; }
+.subtle { @apply text-sm text-neutral-400; }
