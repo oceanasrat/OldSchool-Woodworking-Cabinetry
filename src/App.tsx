@@ -11,14 +11,27 @@ function Stars({ count=5 }: { count?: number }) {
   )
 }
 
-function Modal({open,onClose,children}:{open:boolean,onClose:()=>void,children:React.ReactNode}){
-  if(!open) return null
+function Modal({
+  open,
+  onClose,
+  children,
+}: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+  if (!open) return null
   return (
-    <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm grid place-items-center p-4" onClick={onClose}>
-      <div className="max-w-4xl w-full card p-4" onClick={e=>e.stopPropagation()}>{children}</div>
+    <div className="fixed inset-0 z-50">
+      {/* dim background */}
+      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
+      {/* sheet container */}
+      <div className="absolute inset-x-0 top-0 bottom-0 sm:inset-y-10 sm:mx-auto sm:max-w-4xl">
+        {/* content: full-height on mobile, auto on desktop */}
+        <div className="h-[100dvh] sm:h-auto bg-surface border border-border shadow-soft rounded-none sm:rounded-2xl overflow-auto">
+          <div className="p-4 sm:p-6">{children}</div>
+        </div>
+      </div>
     </div>
   )
 }
+
 
 export default function App(){
   const { site, projects, testimonials, blog } = useData()
