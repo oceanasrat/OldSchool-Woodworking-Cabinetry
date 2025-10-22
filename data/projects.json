@@ -1,0 +1,12 @@
+[
+  {
+    "id": 1,
+    "title": "Walnut Shaker Cabinets",
+    "type": "Cabinets",
+    "material": "Walnut",
+    "hero": "/images/walnut-cabinets.jpg",
+    "images": ["/images/walnut-1.jpg", "/images/walnut-2.jpg"],
+    "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
+    "metrics": ["120 hrs craftsmanship", "Zero-VOC finish", "Soft-close hardware"]
+  }
+]
