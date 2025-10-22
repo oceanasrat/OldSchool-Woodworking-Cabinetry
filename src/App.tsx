@@ -61,7 +61,11 @@ export default function App(){
       <div className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border">
         <div className="container-max py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 font-semibold">
-            <img src="/logo.svg" alt="Old School Woodworking" className="h-7 w-auto" />
+            <img
+  src="/OldSchool-Woodworking-Cabinetry/images/brand/logo.png"
+  alt="Old School Woodworking"
+  className="h-7 w-auto"
+/>
             <span className="hidden sm:inline text-brand">Old School Woodworking</span>
           </a>
           <nav className="hidden md:flex items-center gap-6 text-sm">
