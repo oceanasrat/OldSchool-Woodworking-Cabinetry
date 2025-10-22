@@ -11,31 +11,16 @@
     ],
     "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
     "metrics": ["Zero-VOC finish", "Soft-close hardware", "120 hr craftsmanship"]
-  }
-]
-
+  },
   {
     "id": "oak-vanity",
     "title": "Oak Vanity",
     "type": "Bathrooms",
     "material": "Oak",
     "images": [
-      "/images/projects/bathrooms/oak-vanity/01.jpg",
-      "/images/projects/bathrooms/oak-vanity/02.jpg"
+      "images/projects/bathrooms/oak-vanity/01.jpg"
     ],
-    "blurb": "Rift-sawn oak vanity with integrated pulls and durable varnish.",
-    "metrics": ["Waterproof finish", "Hidden leveling feet"]
-  },
-  {
-    "id": "ash-dining",
-    "title": "Ash Dining Table",
-    "type": "Furniture",
-    "material": "Ash",
-    "images": [
-      "/images/projects/furniture/ash-dining-table/01.jpg",
-      "/images/projects/furniture/ash-dining-table/02.jpg"
-    ],
-    "blurb": "Solid ash table with breadboard ends.",
-    "metrics": ["Mortise & tenon", "Hand-applied oil"]
+    "blurb": "Rift-sawn oak vanity with durable varnish.",
+    "metrics": ["Waterproof finish"]
   }
 ]
