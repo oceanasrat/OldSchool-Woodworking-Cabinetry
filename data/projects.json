@@ -1,12 +1,39 @@
 [
   {
-    "id": 1,
-    "title": "Walnut Shaker Cabinets",
-    "type": "Cabinets",
+    "id": "walnut-shaker-kitchen",
+    "title": "Walnut Shaker Kitchen",
+    "type": "Kitchens",
     "material": "Walnut",
-    "hero": "/images/walnut-cabinets.jpg",
-    "images": ["/images/walnut-1.jpg", "/images/walnut-2.jpg"],
+    "images": [
+      "/images/projects/kitchens/walnut-shaker/01.jpg",
+      "/images/projects/kitchens/walnut-shaker/02.jpg",
+      "/images/projects/kitchens/walnut-shaker/03.jpg"
+    ],
     "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
-    "metrics": ["120 hrs craftsmanship", "Zero-VOC finish", "Soft-close hardware"]
+    "metrics": ["Zero-VOC finish", "Soft-close hardware", "120 hr craftsmanship"]
+  },
+  {
+    "id": "oak-vanity",
+    "title": "Oak Vanity",
+    "type": "Bathrooms",
+    "material": "Oak",
+    "images": [
+      "/images/projects/bathrooms/oak-vanity/01.jpg",
+      "/images/projects/bathrooms/oak-vanity/02.jpg"
+    ],
+    "blurb": "Rift-sawn oak vanity with integrated pulls and durable varnish.",
+    "metrics": ["Waterproof finish", "Hidden leveling feet"]
+  },
+  {
+    "id": "ash-dining",
+    "title": "Ash Dining Table",
+    "type": "Furniture",
+    "material": "Ash",
+    "images": [
+      "/images/projects/furniture/ash-dining-table/01.jpg",
+      "/images/projects/furniture/ash-dining-table/02.jpg"
+    ],
+    "blurb": "Solid ash table with breadboard ends.",
+    "metrics": ["Mortise & tenon", "Hand-applied oil"]
   }
 ]
