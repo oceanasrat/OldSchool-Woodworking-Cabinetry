@@ -1,5 +1,4 @@
 import React, { useMemo, useState } from 'react'
-import { motion } from 'framer-motion'
 import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, ChevronRight, Star, Quote } from 'lucide-react'
 import { useData } from './lib/data'
 
@@ -15,9 +14,7 @@ function Modal({open,onClose,children}:{open:boolean,onClose:()=>void,children:R
   if(!open) return null
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm grid place-items-center p-4" onClick={onClose}>
-      <div className="max-w-4xl w-full card p-4" onClick={e=>e.stopPropagation()}>
-        {children}
-      </div>
+      <div className="max-w-4xl w-full card p-4" onClick={e=>e.stopPropagation()}>{children}</div>
     </div>
   )
 }
@@ -31,18 +28,18 @@ export default function App(){
   const CATEGORIES = ['All','Cabinets','Furniture','Built-ins'] as const
   const MATERIALS = ['All','Walnut','Oak','Ash','Maple'] as const
 
-  const filtered = useMemo(()=>{
-    return projects.filter(p =>
+  const filtered = useMemo(()=>(
+    projects.filter(p =>
       (category==='All'||p.type===category) &&
-      (material==='All'||p.material===material) &&
+      (material==='All'||(p as any).material===material) &&
       (query===''||p.title.toLowerCase().includes(query.toLowerCase()))
     )
-  },[projects,category,material,query])
+  ),[projects,category,material,query])
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-black text-white">
       {/* Top bar */}
-      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur border-b border-white/10">
+      <div className="sticky top-0 z-40 bg-black/80 backdrop-blur border-b border-white/10">
         <div className="container-max py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-2 font-semibold">
             <Hammer className="w-5 h-5" /> {site.name}
@@ -63,9 +60,7 @@ export default function App(){
       {/* Hero */}
       <section className="section grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <motion.h1 initial={{opacity:0,y:10}} animate={{opacity:1,y:0}} transition={{duration:.5}} className="text-4xl md:text-5xl font-bold leading-tight">
-            {site.tagline}
-          </motion.h1>
+          <h1 className="text-4xl md:text-5xl font-bold leading-tight">{site.tagline}</h1>
           <p className="mt-4 subtle max-w-prose">
             Handcrafted pieces tailored to your space. We design, build, and install cabinetry, furniture, and built-ins with premium materials and traditional joinery.
           </p>
@@ -79,12 +74,9 @@ export default function App(){
             <div className="flex items-center gap-2"><MapPin className="w-4 h-4" />{site.city}</div>
           </div>
         </div>
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{duration:.6}} className="relative aspect-[4/3] rounded-2xl bg-white/5 overflow-hidden shadow-xl">
-          <div className="absolute inset-0 grid place-items-center">
-            <ImageIcon className="w-12 h-12 opacity-30" />
-            <span className="sr-only">Project hero image</span>
-          </div>
-        </motion.div>
+        <div className="relative aspect-[4/3] rounded-2xl bg-white/5 overflow-hidden shadow-xl grid place-items-center">
+          <ImageIcon className="w-12 h-12 opacity-30" />
+        </div>
       </section>
 
       {/* Portfolio */}
@@ -108,10 +100,8 @@ export default function App(){
         <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(p => (
             <div key={p.id} className="card overflow-hidden">
-              <div className="relative aspect-[4/3] bg-white/5">
-                <div className="absolute inset-0 grid place-items-center">
-                  <ImageIcon className="w-10 h-10 opacity-30" />
-                </div>
+              <div className="relative aspect-[4/3] bg-white/5 grid place-items-center">
+                <ImageIcon className="w-10 h-10 opacity-30" />
               </div>
               <div className="p-5">
                 <div className="flex items-center justify-between">
@@ -141,20 +131,17 @@ export default function App(){
               <div key={p.id} className="card p-5">
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold">{p.title}</h3>
-                  <span className="badge">{p.material}</span>
+                  <span className="badge">{(p as any).material || ''}</span>
                 </div>
                 <p className="subtle mt-1">{p.blurb}</p>
                 <details className="mt-3"><summary>Materials & Hardware</summary>
-                  <p className="subtle mt-2">Premium {p.material.toLowerCase()} lumber, FSC-certified plywood, soft-close hinges, and hidden leveling feet.</p>
+                  <p className="subtle mt-2">Premium {(p as any).material?.toLowerCase?.() || 'wood'}, FSC-certified plywood, soft-close hinges, and hidden leveling feet.</p>
                 </details>
                 <details className="mt-2"><summary>Techniques</summary>
                   <p className="subtle mt-2">Mortise-and-tenon joinery, precise edge-banding, spray booth finishing, and on-site scribing for a perfect fit.</p>
                 </details>
                 <details className="mt-2"><summary>Process</summary>
-                  <p className="subtle mt-2">From sketch to install: concept moodboard, 3D drawing approval, shop build with QA photos, delivery & clean install.</p>
-                </details>
-                <details className="mt-2"><summary>Results</summary>
-                  <p className="subtle mt-2">Clients reported improved storage, better lighting, and a cohesive aesthetic—raising the home’s appraisal value.</p>
+                  <p className="subtle mt-2">From sketch to install: concept moodboard, 3D drawings, shop build with QA photos, delivery & clean install.</p>
                 </details>
               </div>
             ))}
@@ -167,7 +154,7 @@ export default function App(){
         <div>
           <h2 className="heading">Our Story</h2>
           <p className="subtle mt-3 max-w-prose">
-            We’re a small workshop building functional, honest furniture and cabinetry. Every piece is made to order. We blend time-tested methods with modern tooling, prioritizing sustainable materials and long-term serviceability.
+            We’re a small workshop building functional, honest furniture and cabinetry. Every piece is made to order. We blend time-tested methods with modern tooling.
           </p>
           <div className="mt-5 grid sm:grid-cols-2 gap-3">
             <div className="card p-4"><div className="font-semibold text-base">Values</div><div className="subtle">Craft, transparency, and kindness.</div></div>
@@ -188,7 +175,7 @@ export default function App(){
               <div key={i} className="card p-5">
                 <div className="flex items-center justify-between">
                   <div className="font-semibold text-base">{t.name}</div>
-                  <Stars count={t.rating} />
+                  <Stars count={t.rating as number} />
                 </div>
                 <div className="flex items-start gap-2 subtle mt-2"><Quote className="w-4 h-4 mt-0.5" /> {t.quote}</div>
               </div>
@@ -208,14 +195,14 @@ export default function App(){
         </div>
         <div className="mt-6 grid md:grid-cols-3 gap-6">
           {blog.map(b => (
-            <div key={b.slug} className="card overflow-hidden">
+            <div key={(b as any).slug} className="card overflow-hidden">
               <div className="aspect-video bg-white/5 grid place-items-center">
                 <span className="subtle">Cover</span>
               </div>
               <div className="p-5">
-                <div className="text-lg font-semibold">{b.title}</div>
-                <div className="subtle">{new Date(b.date).toLocaleDateString()}</div>
-                <p className="subtle mt-2">{b.excerpt}</p>
+                <div className="text-lg font-semibold">{(b as any).title}</div>
+                <div className="subtle">{new Date((b as any).date).toLocaleDateString()}</div>
+                <p className="subtle mt-2">{(b as any).excerpt}</p>
               </div>
             </div>
           ))}
@@ -227,7 +214,8 @@ export default function App(){
         <div>
           <h2 className="heading">Request a Quote</h2>
           <p className="subtle">Tell us about your project. We usually reply within one business day.</p>
-          <form className="mt-6 grid gap-4" method="POST" action={site.formspreeEndpoint || undefined} onSubmit={(e)=>{ if(!site.formspreeEndpoint){ e.preventDefault(); alert('Thanks! (Formspree endpoint not set)') } }}>
+          <form className="mt-6 grid gap-4" method="POST" action={site.formspreeEndpoint || undefined}
+                onSubmit={(e)=>{ if(!site.formspreeEndpoint){ e.preventDefault(); alert('Thanks! (Formspree not set)') } }}>
             <div className="grid sm:grid-cols-2 gap-4">
               <input required className="input" name="name" placeholder="Full name" />
               <input required type="email" className="input" name="email" placeholder="Email" />
@@ -237,7 +225,7 @@ export default function App(){
               <input className="input" name="city" placeholder="City" />
             </div>
             <select className="input" name="service">
-              {site.services.map(s => <option key={s}>{s}</option>)}
+              {site.services.map((s:string) => <option key={s}>{s}</option>)}
             </select>
             <textarea required className="textarea min-h-[120px]" name="details" placeholder="Describe your project, dimensions, timeline, budget range…"></textarea>
             <div className="flex items-center justify-between">
@@ -279,7 +267,7 @@ export default function App(){
       <Modal open={!!viewer} onClose={()=>setViewer(null)}>
         <div className="font-semibold text-lg mb-3">{viewer?.title}</div>
         <div className="grid sm:grid-cols-2 gap-3">
-          {viewer?.images.map((src,i)=>(
+          {viewer?.images.map((_,i)=>(
             <div key={i} className="aspect-video rounded-lg bg-white/5 grid place-items-center">
               <span className="subtle">Image {i+1}</span>
             </div>
