@@ -4,5 +4,5 @@ import react from '@vitejs/plugin-react'
 // base gets auto-updated by scripts/brand.mjs
 export default defineConfig({
   plugins: [react()],
-  base: '/artisan-portfolio/'
+  base: '/<OldSchool-Woodworking-Cabinetry>/'
 })
