@@ -1,0 +1,18 @@
+{
+  "name": "Old School Woodworks",
+  "tagline": "Bespoke Cabinets & Furniture—Built to Last",
+  "phone": "(214) 555-0192",
+  "email": "hello@oldschoolwoodworks.com",
+  "city": "Dallas–Fort Worth",
+  "instagram": "#",
+  "facebook": "#",
+  "formspreeEndpoint": "",
+  "colors": {
+    "primary": "#eab308"
+  },
+  "services": [
+    "Cabinetry",
+    "Furniture",
+    "Built-ins"
+  ]
+}
