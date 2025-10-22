@@ -19,4 +19,4 @@ npm run dev
 ```
 
 ## Deployment
-Push changes to GitHub → your site auto-updates (GitHub Pages).
+Push changes to GitHub → your site auto-updates (GitHub Pages). 
