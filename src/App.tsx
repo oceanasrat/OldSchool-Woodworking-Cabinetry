@@ -5,6 +5,12 @@ import SmartEstimator from './components/SmartEstimator'
 import ZoomGallery from './components/ZoomGallery'
 import Timeline from './components/Timeline'
 
+// Prefix any local asset path with the correct base (works on GitHub Pages)
+const withBase = (path: string) =>
+  path.startsWith('http')
+    ? path
+    : new URL(path.replace(/^\//, ''), import.meta.env.BASE_URL).href
+
 function Stars({ count=5 }: { count?: number }) {
   return (
     <div className="flex gap-1" aria-label={`${count} star rating`}>
