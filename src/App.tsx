@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, ChevronRight, Star, Quote } from 'lucide-react'
 import { useData } from './lib/data'
+import SmartEstimator from './components/SmartEstimator'   // ← NEW
 
 function Stars({ count=5 }: { count?: number }) {
   return (
@@ -25,6 +26,10 @@ export default function App(){
   const [category,setCategory] = useState<'All'|'Cabinets'|'Furniture'|'Built-ins'>('All')
   const [material,setMaterial] = useState<'All'|'Walnut'|'Oak'|'Ash'|'Maple'>('All')
   const [viewer,setViewer] = useState<{title:string,images:string[]} | null>(null)
+
+  // NEW — estimator state
+  const [showEstimator, setShowEstimator] = useState(false)
+  const [estimateSummary, setEstimateSummary] = useState('')   // prefills the contact form
 
   const CATEGORIES = ['All','Cabinets','Furniture','Built-ins'] as const
   const MATERIALS = ['All','Walnut','Oak','Ash','Maple'] as const
@@ -53,6 +58,7 @@ export default function App(){
             <a href="#blog" className="hover:underline">Blog</a>
           </nav>
           <div className="flex items-center gap-2">
+            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button> {/* ← NEW */}
             <a className="btn-primary rounded-2xl" href="#contact">Get a Quote</a>
           </div>
         </div>
@@ -66,8 +72,8 @@ export default function App(){
             Handcrafted pieces tailored to your space. We design, build, and install cabinetry, furniture, and built-ins with premium materials and traditional joinery.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
+            <button className="btn-outline rounded-2xl" onClick={()=>setShowEstimator(true)}>Free AI Estimate</button> {/* ← NEW */}
             <a href="#portfolio" className="btn-primary rounded-2xl">View Portfolio</a>
-            <a href="#contact" className="btn-outline rounded-2xl">Request a Quote</a>
           </div>
           <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted">
             <div className="flex items-center gap-2"><Phone className="w-4 h-4" />{site.phone}</div>
@@ -215,6 +221,20 @@ export default function App(){
         <div>
           <h2 className="heading">Request a Quote</h2>
           <p className="subtle">Tell us about your project. We usually reply within one business day.</p>
+
+          {/* NEW — show the captured estimator summary in the form */}
+          {estimateSummary && (
+            <div className="card p-4 mb-4">
+              <div className="text-sm subtle mb-2">AI Estimate summary (you can edit before sending):</div>
+              <textarea
+                className="textarea min-h-[100px]"
+                name="estimate"
+                value={estimateSummary}
+                onChange={(e)=>setEstimateSummary(e.target.value)}
+              />
+            </div>
+          )}
+
           <form className="mt-6 grid gap-4" method="POST" action={site.formspreeEndpoint || undefined}
                 onSubmit={(e)=>{ if(!site.formspreeEndpoint){ e.preventDefault(); alert('Thanks! (Formspree not set)') } }}>
             <div className="grid sm:grid-cols-2 gap-4">
@@ -230,7 +250,7 @@ export default function App(){
             </select>
             <textarea required className="textarea min-h-[120px]" name="details" placeholder="Describe your project, dimensions, timeline, budget range…"></textarea>
             <div className="flex items-center justify-between">
-              <div className="subtle">Follow our latest work on social media.</div>
+              <div className="subtle">Prefer a quick ballpark? Try the “Free AI Estimate”.</div>
               <button className="btn-primary rounded-2xl">Send Request</button>
             </div>
           </form>
@@ -265,6 +285,7 @@ export default function App(){
         </div>
       </footer>
 
+      {/* Photo viewer modal (existing) */}
       <Modal open={!!viewer} onClose={()=>setViewer(null)}>
         <div className="font-semibold text-lg mb-3">{viewer?.title}</div>
         <div className="grid sm:grid-cols-2 gap-3">
@@ -274,6 +295,20 @@ export default function App(){
             </div>
           ))}
         </div>
+      </Modal>
+
+      {/* NEW — Estimator modal */}
+      <Modal open={showEstimator} onClose={()=>setShowEstimator(false)}>
+        <SmartEstimator
+          onClose={()=>setShowEstimator(false)}
+          onUse={(summary) => {
+            setEstimateSummary(summary)
+            setShowEstimator(false)
+            // Scroll to the contact form for convenience
+            const el = document.getElementById('contact')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
+          }}
+        />
       </Modal>
     </div>
   )
