@@ -5,13 +5,15 @@
     "type": "Kitchens",
     "material": "Walnut",
     "images": [
-      "/images/projects/kitchens/walnut-shaker/01.jpg",
-      "/images/projects/kitchens/walnut-shaker/02.jpg",
-      "/images/projects/kitchens/walnut-shaker/03.jpg"
+      "images/projects/kitchens/walnut-shaker/01.jpg",
+      "images/projects/kitchens/walnut-shaker/02.jpg",
+      "images/projects/kitchens/walnut-shaker/03.jpg"
     ],
     "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
     "metrics": ["Zero-VOC finish", "Soft-close hardware", "120 hr craftsmanship"]
-  },
+  }
+]
+
   {
     "id": "oak-vanity",
     "title": "Oak Vanity",
