@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react'
 import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, Quote, Star, ChevronRight } from 'lucide-react'
 import { useData } from './lib/data'
+import SmartEstimator from './components/SmartEstimator'
 import ZoomGallery from './components/ZoomGallery'
 import Timeline from './components/Timeline'
 
@@ -12,7 +13,9 @@ function Stars({ count = 5 }) {
     </div>
   )
 }
-function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+function Modal({
+  open, onClose, children,
+}: { open: boolean; onClose: () => void; children: React.ReactNode }) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50">
@@ -26,13 +29,13 @@ function Modal({ open, onClose, children }: { open: boolean; onClose: () => void
   )
 }
 
-/** Earthy palette (fallbacks if your utility classes don’t set colors) */
+/** Warm earthy palette fallbacks */
 const palette = {
   cream: '#FAF7F2',
   charcoal: '#1F2937',
-  copper: '#B87333', // accents
+  copper: '#B87333',
   wood: '#8B5E34',
-  border: '#E5E7EB'
+  border: '#E5E7EB',
 }
 
 export default function App() {
@@ -42,6 +45,8 @@ export default function App() {
   const [category, setCategory] = useState<'All' | 'Kitchens' | 'Bathrooms' | 'Mudrooms' | 'Laundry' | 'Closets' | 'Furniture'>('All')
   const [material, setMaterial] = useState<'All' | 'Walnut' | 'Oak' | 'Ash' | 'Maple'>('All')
   const [viewer, setViewer] = useState<{ title: string, images: string[] } | null>(null)
+  const [showEstimator, setShowEstimator] = useState(false)
+  const [estimateSummary, setEstimateSummary] = useState('')
 
   const filtered = useMemo(() =>
     projects.filter((p: any) =>
@@ -56,7 +61,7 @@ export default function App() {
       <div className="sticky top-0 z-40 border-b" style={{ background: 'rgba(250,247,242,.90)', backdropFilter: 'blur(6px)', borderColor: palette.border }}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 font-semibold">
-            {/* Absolute site path = GitHub Pages safe */}
+            {/* Absolute site path => GitHub Pages safe */}
             <img
               src="/OldSchool-Woodworking-Cabinetry/images/brand/logo.png"
               alt="Old School Woodworking"
@@ -74,9 +79,35 @@ export default function App() {
             <a href="#contact" className="hover:underline">Contact</a>
           </nav>
 
-          <div className="flex items-center gap-2">
-            <a className="px-4 py-2 rounded-2xl border" style={{ borderColor: palette.border }} href="#contact">Free Consultation</a>
-            <a className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.copper }} href="#contact">Get a Quote</a>
+          {/* CTAs — desktop: show both; mobile: primary only */}
+          <div className="hidden sm:flex items-center gap-2">
+            <a
+              href="#contact"
+              className="px-4 py-2 rounded-2xl border"
+              aria-label="Book a free 15-minute consultation"
+              style={{ borderColor: palette.border }}
+            >
+              Free Consultation
+            </a>
+            <button
+              className="px-4 py-2 rounded-2xl text-white"
+              aria-label="Open the quote estimator"
+              style={{ background: palette.copper }}
+              onClick={() => setShowEstimator(true)}
+            >
+              Get a Quote
+            </button>
+          </div>
+          {/* Mobile: single primary CTA for clarity */}
+          <div className="sm:hidden flex items-center gap-2">
+            <a
+              href="#contact"
+              className="px-3 py-2 rounded-lg text-white"
+              style={{ background: palette.copper }}
+              aria-label="Book a free consultation"
+            >
+              Free Consultation
+            </a>
           </div>
         </div>
       </div>
@@ -107,7 +138,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Parallax band (subtle wood texture) */}
+      {/* Parallax band */}
       <section
         className="h-56 md:h-72 bg-cover bg-center"
         style={{
@@ -122,11 +153,16 @@ export default function App() {
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
             <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Portfolio</h2>
-            <p className="opacity-80">Interactive gallery with zoom-on-click. Filter by room type, material, or search by name.</p>
+            <p className="opacity-80">Interactive gallery with zoom-in. Filter by room type, material, or search by name.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <input className="px-3 py-2 rounded-xl border w-56" style={{ borderColor: palette.border }} placeholder="Search projects…"
-                   value={query} onChange={(e) => setQuery(e.target.value)} />
+            <input
+              className="px-3 py-2 rounded-xl border w-56"
+              style={{ borderColor: palette.border }}
+              placeholder="Search projects…"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
             <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} value={category} onChange={(e) => setCategory(e.target.value as any)}>
               {['All', 'Kitchens', 'Bathrooms', 'Mudrooms', 'Laundry', 'Closets', 'Furniture'].map(c => <option key={c} value={c}>{c}</option>)}
             </select>
@@ -140,9 +176,13 @@ export default function App() {
           {filtered.map((p: any) => (
             <div key={p.id} className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${palette.border}`, boxShadow: '0 10px 25px rgba(0,0,0,.06)' }}>
               <div className="relative aspect-[4/3] overflow-hidden group">
-                {/* IMPORTANT: use JSON URL as-is (GitHub Pages absolute or full https) */}
-                <img src={p.images[0]} alt={p.title} loading="lazy"
-                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
+                {/* Use JSON URL as-is; do NOT wrap with any helper */}
+                <img
+                  src={p.images[0]}
+                  alt={p.title}
+                  loading="lazy"
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                />
               </div>
               <div className="p-5">
                 <div className="flex items-center justify-between">
@@ -151,12 +191,14 @@ export default function App() {
                 </div>
                 <p className="opacity-80 mt-1">{p.blurb}</p>
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {p.metrics?.map((m: string, i: number) => <span key={i} className="px-2 py-1 text-xs rounded-full" style={{ background: '#f5f5f5' }}>{m}</span>)}
+                  {p.metrics?.map((m: string, i: number) => (
+                    <span key={i} className="px-2 py-1 text-xs rounded-full" style={{ background: '#f5f5f5' }}>{m}</span>
+                  ))}
                 </div>
                 <button
                   className="w-full mt-4 px-4 py-2 rounded-xl border hover:opacity-90 flex items-center justify-center gap-2"
                   style={{ borderColor: palette.border }}
-                  onClick={() => setViewer({ title: p.title, images: p.images /* as-is */ })}
+                  onClick={() => setViewer({ title: p.title, images: p.images })}
                 >
                   View Photos <ChevronRight className="w-4 h-4" />
                 </button>
@@ -170,7 +212,7 @@ export default function App() {
       <section id="case-studies" className="border-y" style={{ borderColor: palette.border, background: '#ffffffb3' }}>
         <div className="max-w-7xl mx-auto px-4 py-12">
           <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Case Studies</h2>
-          <p className="opacity-80">Narrative breakdowns: materials, techniques, and decisions.</p>
+          <p className="opacity-80">Narrative breakdowns: materials, techniques, decisions, and outcomes.</p>
           <div className="mt-6 grid lg:grid-cols-2 gap-6">
             {projects.slice(0, 2).map((p: any) => (
               <div key={p.id} className="rounded-2xl p-5" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
@@ -218,12 +260,12 @@ export default function App() {
         </div>
       </section>
 
-      {/* Services (simple, modern “broken grid” cards) */}
+      {/* Services */}
       <section id="services" className="max-w-7xl mx-auto px-4 py-12">
         <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Services</h2>
         <div className="mt-6 grid md:grid-cols-3 gap-6">
           {[
-            { name: 'Kitchens', blurb: 'Custom cabinetry, island builds, soft-close hardware.' },
+            { name: 'Kitchens', blurb: 'Custom cabinetry, islands, soft-close hardware.' },
             { name: 'Built-ins', blurb: 'Media walls, bookshelves, mudroom lockers.' },
             { name: 'Furniture', blurb: 'Tables, vanities, benches in premium hardwoods.' }
           ].map((s) => (
@@ -237,7 +279,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* Testimonials sprinkled between sections */}
+      {/* Testimonials */}
       <section id="testimonials" className="border-y" style={{ borderColor: palette.border, background: '#ffffffb3' }}>
         <div className="max-w-7xl mx-auto px-4 py-12">
           <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Client Testimonials</h2>
@@ -262,8 +304,21 @@ export default function App() {
       {/* Contact + Free Consultation + Mozaik link */}
       <section id="contact" className="max-w-7xl mx-auto px-4 py-12 grid lg:grid-cols-2 gap-10 items-start">
         <div>
-          <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Free Consultation</h2>
+          <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Request a Free Consultation</h2>
           <p className="opacity-80">Tell us about your project. We usually reply within one business day.</p>
+
+          {estimateSummary && (
+            <div className="rounded-2xl p-4 mb-4" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+              <div className="text-sm opacity-80 mb-2">AI Estimate summary (you can edit before sending):</div>
+              <textarea
+                className="w-full px-3 py-2 rounded-xl border min-h-[100px]"
+                style={{ borderColor: palette.border }}
+                name="estimate"
+                value={estimateSummary}
+                onChange={(e) => setEstimateSummary(e.target.value)}
+              />
+            </div>
+          )}
 
           <form className="mt-6 grid gap-4"
                 method="POST"
@@ -289,7 +344,7 @@ export default function App() {
               </select>
             </div>
 
-            {/* Mozaik integration: simple link input your client can paste */}
+            {/* Mozaik integration link */}
             <input className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }}
                    name="mozaik_link" placeholder="Link to Mozaik files (Drive/Dropbox)" />
 
@@ -297,8 +352,8 @@ export default function App() {
                       name="details" placeholder="Describe your project, dimensions, finishes, timeline, budget range…"></textarea>
 
             <div className="flex items-center justify-between">
-              <div className="opacity-80 text-sm">Prefer a quick ballpark first? Open any project, tap <em>View Photos</em> then contact us.</div>
-              <button className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.copper }}>Send</button>
+              <div className="opacity-80 text-sm">Prefer a quick ballpark? Tap <em>Get a Quote</em> in the header.</div>
+              <button className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.copper }}>Send Request</button>
             </div>
           </form>
         </div>
@@ -311,7 +366,6 @@ export default function App() {
           <div>• Workmanship warranty</div>
           <div>• Insured & background-checked</div>
 
-          {/* Social links if present in site.json */}
           {(site?.social && Object.keys(site.social).length > 0) && (
             <>
               <div className="mt-2 font-semibold" style={{ color: palette.wood }}>Follow</div>
@@ -350,7 +404,19 @@ export default function App() {
       <Modal open={!!viewer} onClose={() => setViewer(null)}>
         {viewer && <ZoomGallery title={viewer.title} images={viewer.images} />}
       </Modal>
+
+      {/* Estimator modal (Get a Quote) */}
+      <Modal open={showEstimator} onClose={() => setShowEstimator(false)}>
+        <SmartEstimator
+          onClose={() => setShowEstimator(false)}
+          onUse={(summary: string) => {
+            setEstimateSummary(summary)
+            setShowEstimator(false)
+            const el = document.getElementById('contact')
+            if (el) el.scrollIntoView({ behavior: 'smooth' })
+          }}
+        />
+      </Modal>
     </div>
   )
 }
- 
