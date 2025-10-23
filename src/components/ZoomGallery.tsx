@@ -18,6 +18,23 @@ export default function ZoomGallery({
 
   const src = images[index]
 
+  // --- helper to close WITHOUT editing App.tsx ---
+  function requestClose() {
+    // 1) use prop if available
+    if (onClose) {
+      onClose()
+      return
+    }
+    // 2) try clicking the modal backdrop (parent Modal has bg-black/60 on overlay)
+    const overlay = document.querySelector('[class*="bg-black/60"]') as HTMLElement | null
+    if (overlay) {
+      overlay.click()
+      return
+    }
+    // 3) last resort: dispatch Escape (safe no-op if not handled)
+    window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape' }))
+  }
+
   // --- navigation helpers ---
   const next = () => {
     setIndex((i) => (i + 1) % images.length)
@@ -36,15 +53,15 @@ export default function ZoomGallery({
   // --- keyboard support ---
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && onClose) onClose()
+      if (e.key === 'Escape') requestClose()
       if (e.key === 'ArrowRight') next()
       if (e.key === 'ArrowLeft') prev()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [])
 
-  // --- zoom/pan handlers (same behavior you had, just kept tidy) ---
+  // --- zoom/pan handlers ---
   function onWheel(e: React.WheelEvent) {
     e.preventDefault()
     const nextZoom = Math.max(1, Math.min(3, zoom + (e.deltaY > 0 ? -0.1 : 0.1)))
@@ -59,16 +76,9 @@ export default function ZoomGallery({
     if (!dragging) return
     setPos({ x: e.clientX - last.x, y: e.clientY - last.y })
   }
-  function onPointerUp() {
-    setDragging(false)
-  }
+  function onPointerUp() { setDragging(false) }
   function toggleZoom() {
-    if (zoom === 1) {
-      setZoom(2)
-    } else {
-      setZoom(1)
-      setPos({ x: 0, y: 0 })
-    }
+    if (zoom === 1) { setZoom(2) } else { setZoom(1); setPos({ x: 0, y: 0 }) }
   }
 
   return (
@@ -80,7 +90,7 @@ export default function ZoomGallery({
           <div className="text-lg font-semibold truncate">{title}</div>
         </div>
         <button
-          onClick={onClose}
+          onClick={requestClose}
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border text-sm"
           style={{ borderColor: '#E5E7EB' }}
           aria-label="Close gallery"
@@ -134,24 +144,12 @@ export default function ZoomGallery({
         {/* Controls bar */}
         <div className="mt-3 flex items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <button
-              className="px-2.5 py-1.5 rounded-md border bg-white"
-              onClick={() => setZoom((z) => Math.max(1, +(z - 0.2).toFixed(2)))}
-            >
-              −
-            </button>
+            <button className="px-2.5 py-1.5 rounded-md border bg-white" onClick={() => setZoom((z) => Math.max(1, +(z - 0.2).toFixed(2)))}>−</button>
             <div className="px-2 py-1 rounded bg-white text-sm border">{Math.round(zoom * 100)}%</div>
-            <button
-              className="px-2.5 py-1.5 rounded-md border bg-white"
-              onClick={() => setZoom((z) => Math.min(3, +(z + 0.2).toFixed(2)))}
-            >
-              +
-            </button>
+            <button className="px-2.5 py-1.5 rounded-md border bg-white" onClick={() => setZoom((z) => Math.min(3, +(z + 0.2).toFixed(2)))}>+</button>
           </div>
 
-          <div className="text-sm opacity-70">
-            {index + 1} / {images.length}
-          </div>
+          <div className="text-sm opacity-70">{index + 1} / {images.length}</div>
 
           <div className="hidden sm:flex items-center gap-2">
             <button className="px-3 py-1.5 rounded-md border bg-white" onClick={prev}>Prev</button>
