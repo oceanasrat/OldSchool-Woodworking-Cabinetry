@@ -5,10 +5,10 @@
     "type": "Kitchens",
     "material": "Walnut",
     "images": [
-  "https://oceanasrat.github.io/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/01.jpg",
-  "https://oceanasrat.github.io/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/02.jpg",
-  "https://oceanasrat.github.io/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/03.jpg"
-],
+    "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/01.jpg",
+    "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/02.jpg",
+    "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/03.jpg"
+  ],
     "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
     "metrics": ["Zero-VOC finish", "Soft-close hardware", "120+ hours"]
   },
