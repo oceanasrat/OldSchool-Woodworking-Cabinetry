@@ -1,12 +1,17 @@
 {
   "name": "Old School Woodworking",
-  "tagline": "Bespoke Cabinets & Furniture—Built to Last",
-  "phone": "(214) 555-0192",
-  "email": "hello@oldschoolwoodworks.com",
-  "city": "Dallas–Fort Worth",
-  "instagram": "#",
-  "facebook": "#",
+  "tagline": "Bespoke cabinetry & furniture",
+  "phone": "(555) 555-0123",
+  "email": "hello@example.com",
+  "city": "Dallas–Fort Worth, TX",
+  "services": ["Cabinetry", "Built-ins", "Furniture"],
   "formspreeEndpoint": "",
-  "colors": { "primary": "#eab308" },
-  "services": ["Cabinetry", "Furniture", "Built-ins"]
+  "logoUrl": "/OldSchool-Woodworking-Cabinetry/images/brand/hero.jpg",
+  "heroUrl": "/OldSchool-Woodworking-Cabinetry/images/brand/hero.jpg",
+  "parallaxUrl": "/OldSchool-Woodworking-Cabinetry/images/brand/wood.jpg",
+  "social": {
+    "instagram": "",
+    "facebook": "",
+    "tiktok": ""
+  }
 }
