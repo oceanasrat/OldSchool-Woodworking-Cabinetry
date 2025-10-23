@@ -4,6 +4,7 @@ import { useData } from './lib/data'
 import SmartEstimator from './components/SmartEstimator'
 import ZoomGallery from './components/ZoomGallery'
 import Timeline from './components/Timeline'
+import SocialBar from './components/SocialBar'
 
 /** Small helpers */
 function Stars({ count = 5 }) {
