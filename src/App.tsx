@@ -368,15 +368,11 @@ export default function App() {
           <div>• Insured & background-checked</div>
 
           {(site?.social && Object.keys(site.social).length > 0) && (
-            <>
-              <div className="mt-2 font-semibold" style={{ color: palette.wood }}>Follow</div>
-              <div className="flex flex-wrap gap-3">
-                {site.social.instagram && <a className="underline" href={site.social.instagram} target="_blank">Instagram</a>}
-                {site.social.facebook && <a className="underline" href={site.social.facebook} target="_blank">Facebook</a>}
-                {site.social.tiktok && <a className="underline" href={site.social.tiktok} target="_blank">TikTok</a>}
-              </div>
-            </>
-          )}
+  <>
+    <div className="mt-2 font-semibold" style={{ color: palette.wood }}>Follow</div>
+    <SocialBar social={site.social} />
+  </>
+)}
         </div>
       </section>
 
