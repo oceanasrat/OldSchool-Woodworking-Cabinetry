@@ -77,3 +77,38 @@ body{
 
 /* utility: max container  */
 .container-max{ max-width:80rem; margin-inline:auto; padding-inline:1rem; }
+/* ---- MOBILE HERO IMAGE FIX ----
+   Ensures the hero image always has height on phones
+   without touching App.tsx markup.
+*/
+
+/* Target the hero image by its alt text (what you already have). */
+img[alt="Workshop"] {
+  display: block;
+  width: 100%;
+  /* Give it a responsive height and make it cover the frame */
+  height: clamp(220px, 45vh, 420px);
+  object-fit: cover;
+  border-radius: 1.25rem; /* matches your rounded card */
+  background-color: #efe9dd; /* warm fallback while loading */
+}
+
+/* Slightly taller on very small phones */
+@media (max-width: 380px) {
+  img[alt="Workshop"] {
+    height: clamp(220px, 52vh, 460px);
+  }
+}
+
+/* If there’s any wrapper imposing awkward sizing, normalize it too */
+img[alt="Workshop"] {
+  position: relative;
+  z-index: 0;
+}
+
+/* Optional: avoid unexpected max-width/height from browser defaults */
+img[alt="Workshop"] {
+  max-width: 100%;
+  max-height: none;
+}
+
