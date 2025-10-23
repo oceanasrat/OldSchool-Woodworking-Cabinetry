@@ -1,5 +1,5 @@
 {
-  "name": "Old School Woodworking",
+  "name": "Old School Woodworking and Cabinetry",
   "tagline": "Bespoke cabinetry & furniture",
   "phone": "(555) 555-0123",
   "email": "hello@example.com",
@@ -12,6 +12,10 @@
   "social": {
     "instagram": "",
     "facebook": "",
-    "tiktok": ""
+    "tiktok": "",
+    "youtube": "",
+    "pinterest": "",
+    "linkedin": "",
+    "houzz": ""
   }
 }
