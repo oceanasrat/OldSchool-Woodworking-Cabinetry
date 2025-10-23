@@ -62,14 +62,18 @@ export default function App() {
       <div className="sticky top-0 z-40 border-b" style={{ background: 'rgba(250,247,242,.90)', backdropFilter: 'blur(6px)', borderColor: palette.border }}>
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 font-semibold">
-            {/* Absolute site path => GitHub Pages safe */}
-            <img
-              src="/OldSchool-Woodworking-Cabinetry/images/brand/logo.png"
-              alt="Old School Woodworking"
-              className="h-8 w-auto"
-            />
-            <span className="hidden sm:inline" style={{ color: palette.copper }}>{site?.name || 'Old School Woodworking'}</span>
-          </a>
+  <img
+    src="/OldSchool-Woodworking-Cabinetry/images/brand/logo.png"
+    alt="Old School Woodworking and Cabinetry logo"
+    className="h-10 sm:h-12 w-auto shrink-0"   // ⬅️ slightly larger than before
+  />
+  <span
+    className="hidden md:inline whitespace-nowrap"
+    style={{ color: palette.copper }}
+  >
+    {site?.name || 'Old School Woodworking and Cabinetry'}
+  </span>
+</a>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#portfolio" className="hover:underline">Portfolio</a>
