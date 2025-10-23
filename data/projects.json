@@ -5,22 +5,23 @@
     "type": "Kitchens",
     "material": "Walnut",
     "images": [
-      "images/projects/kitchens/walnut-shaker/01.jpg",
-      "images/projects/kitchens/walnut-shaker/02.jpg",
-      "images/projects/kitchens/walnut-shaker/03.jpg"
+      "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/01.jpg",
+      "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/02.jpg",
+      "/OldSchool-Woodworking-Cabinetry/images/projects/kitchens/walnut-shaker/03.jpg"
     ],
     "blurb": "Custom built-in kitchen with hand-rubbed oil finish.",
-    "metrics": ["Zero-VOC finish", "Soft-close hardware", "120 hr craftsmanship"]
+    "metrics": ["Zero-VOC finish", "Soft-close hardware", "120+ hours"]
   },
   {
     "id": "oak-vanity",
-    "title": "Oak Vanity",
+    "title": "Rift Oak Vanity",
     "type": "Bathrooms",
     "material": "Oak",
     "images": [
-      "images/projects/bathrooms/oak-vanity/01.jpg"
+      "/OldSchool-Woodworking-Cabinetry/images/projects/bathrooms/oak-vanity/01.jpg"
     ],
     "blurb": "Rift-sawn oak vanity with durable varnish.",
-    "metrics": ["Waterproof finish"]
+    "metrics": ["Waterproof finish", "Soft-close drawers"]
   }
 ]
+
