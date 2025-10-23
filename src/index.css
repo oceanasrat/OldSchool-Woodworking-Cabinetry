@@ -77,38 +77,34 @@ body{
 
 /* utility: max container  */
 .container-max{ max-width:80rem; margin-inline:auto; padding-inline:1rem; }
-/* ---- MOBILE HERO IMAGE FIX ----
-   Ensures the hero image always has height on phones
-   without touching App.tsx markup.
+
+/* --- Parallax wood image: iOS/mobile fix ---
+   iOS Safari doesn't render background-attachment: fixed reliably.
+   We disable "fixed" on small screens and force proper sizing.
 */
 
-/* Target the hero image by its alt text (what you already have). */
-img[alt="Workshop"] {
-  display: block;
-  width: 100%;
-  /* Give it a responsive height and make it cover the frame */
-  height: clamp(220px, 45vh, 420px);
-  object-fit: cover;
-  border-radius: 1.25rem; /* matches your rounded card */
-  background-color: #efe9dd; /* warm fallback while loading */
+/* Target any element whose inline style references the wood image */
+section[style*="images/brand/wood.jpg"],
+div[style*="images/brand/wood.jpg"] {
+  background-position: center !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  min-height: clamp(220px, 45vh, 520px);      /* ensure visible height */
+  border-radius: 1.25rem;                     /* match your rounded card */
 }
 
-/* Slightly taller on very small phones */
-@media (max-width: 380px) {
-  img[alt="Workshop"] {
-    height: clamp(220px, 52vh, 460px);
+/* On phones: disable parallax to avoid the iOS black box */
+@media (max-width: 768px) {
+  section[style*="images/brand/wood.jpg"],
+  div[style*="images/brand/wood.jpg"] {
+    background-attachment: scroll !important; /* turn off 'fixed' */
   }
 }
 
-/* If there’s any wrapper imposing awkward sizing, normalize it too */
-img[alt="Workshop"] {
-  position: relative;
-  z-index: 0;
+/* Extra safety for iOS Safari */
+@supports (-webkit-touch-callout: none) {
+  section[style*="images/brand/wood.jpg"],
+  div[style*="images/brand/wood.jpg"] {
+    background-attachment: scroll !important;
+  }
 }
-
-/* Optional: avoid unexpected max-width/height from browser defaults */
-img[alt="Workshop"] {
-  max-width: 100%;
-  max-height: none;
-}
-
