@@ -1,64 +1,68 @@
-import React, { useRef, useState } from "react"
-import { ZoomIn, ZoomOut } from "lucide-react"
+import React, { useState } from 'react'
 
-type Props = { title?: string; images: string[] }
-
-export default function ZoomGallery({ title, images }: Props) {
-  const [i, setI] = useState(0)
-  const [scale, setScale] = useState(1)
+export default function ZoomGallery({ title, images }: { title: string; images: string[] }) {
+  const [index, setIndex] = useState(0)
+  const [zoom, setZoom] = useState(1)
   const [pos, setPos] = useState({ x: 0, y: 0 })
-  const drag = useRef<{x:number;y:number}|null>(null)
-  const clamp = (n:number,min:number,max:number)=>Math.max(min,Math.min(max,n))
+  const [dragging, setDragging] = useState(false)
+  const [last, setLast] = useState({ x: 0, y: 0 })
 
-  function onWheel(e: React.WheelEvent<HTMLDivElement>) {
+  const src = images[index]
+
+  function onWheel(e: React.WheelEvent) {
     e.preventDefault()
-    setScale(s => clamp(s + (e.deltaY > 0 ? -0.15 : 0.15), 1, 3))
+    const next = Math.max(1, Math.min(3, zoom + (e.deltaY > 0 ? -0.1 : 0.1)))
+    setZoom(Number(next.toFixed(2)))
   }
-  function start(e: React.MouseEvent | React.TouchEvent) {
-    const p = "touches" in e ? e.touches[0] : (e as React.MouseEvent)
-    drag.current = { x: p.clientX - pos.x, y: p.clientY - pos.y }
+  function onPointerDown(e: React.PointerEvent) {
+    if (zoom === 1) return
+    setDragging(true)
+    setLast({ x: e.clientX - pos.x, y: e.clientY - pos.y })
   }
-  function move(e: React.MouseEvent | React.TouchEvent) {
-    if (!drag.current) return
-    const p = "touches" in e ? e.touches[0] : (e as React.MouseEvent)
-    setPos({ x: p.clientX - drag.current.x, y: p.clientY - drag.current.y })
+  function onPointerMove(e: React.PointerEvent) {
+    if (!dragging) return
+    setPos({ x: e.clientX - last.x, y: e.clientY - last.y })
   }
-  function end(){ drag.current = null }
+  function onPointerUp() { setDragging(false) }
+  function toggleZoom() { setZoom(zoom === 1 ? 2 : 1); setPos({ x: 0, y: 0 }) }
 
   return (
-    <div className="space-y-3">
-      {title && <div className="text-lg font-semibold">{title}</div>}
-
-      <div
-        className="relative rounded-2xl border border-border bg-black/5 overflow-hidden h-[52vh] md:h-[60vh] grid place-items-center"
-        onWheel={onWheel}
-        onMouseDown={start} onMouseMove={move} onMouseUp={end} onMouseLeave={end}
-        onTouchStart={start} onTouchMove={move} onTouchEnd={end}
-      >
-        <img
-          src={images[i] ?? ""}
-          alt=""
-          className="select-none pointer-events-none"
-          style={{ transform: `translate(${pos.x}px, ${pos.y}px) scale(${scale})`,
-                   transition: drag.current ? "none" : "transform .15s ease" }}
-        />
-        <div className="absolute bottom-3 right-3 flex gap-2">
-          <button className="btn-outline rounded-xl bg-surface" onClick={()=>setScale(s=>clamp(s-0.25,1,3))}><ZoomOut className="w-4 h-4"/></button>
-          <button className="btn-outline rounded-xl bg-surface" onClick={()=>setScale(s=>clamp(s+0.25,1,3))}><ZoomIn className="w-4 h-4"/></button>
-          <button className="btn-outline rounded-xl bg-surface" onClick={()=>{setScale(1);setPos({x:0,y:0})}}>Reset</button>
+    <div className="grid gap-4">
+      <div className="text-lg font-semibold">{title}</div>
+      <div className="relative">
+        <div className="aspect-[4/3] bg-black/5 overflow-hidden rounded-xl"
+             onWheel={onWheel}
+             onPointerDown={onPointerDown}
+             onPointerMove={onPointerMove}
+             onPointerUp={onPointerUp}
+             onPointerCancel={onPointerUp}
+             onPointerLeave={onPointerUp}
+             onDoubleClick={toggleZoom}
+             role="img" aria-label={`${title} image ${index + 1} of ${images.length}`}>
+          <img
+            src={src}
+            alt=""
+            className="h-full w-full object-contain select-none touch-none"
+            style={{ transform: `translate(${pos.x}px, ${pos.y}px) scale(${zoom})`, transformOrigin: 'center center' }}
+            onClick={toggleZoom}
+            draggable={false}
+          />
+        </div>
+        <div className="absolute bottom-3 right-3 flex items-center gap-2">
+          <button className="px-2.5 py-1.5 rounded-md border bg-white/90" onClick={() => setZoom(Math.max(1, +(zoom - 0.2).toFixed(2)))}>-</button>
+          <div className="px-2 py-1 rounded bg-white/90 text-sm">{Math.round(zoom*100)}%</div>
+          <button className="px-2.5 py-1.5 rounded-md border bg-white/90" onClick={() => setZoom(Math.min(3, +(zoom + 0.2).toFixed(2)))}>+</button>
         </div>
       </div>
 
-      <div className="flex gap-2 overflow-x-auto">
-        {images.map((src, idx)=>(
-          <button key={idx}
-            className={`h-16 w-24 shrink-0 overflow-hidden rounded-xl border ${i===idx?'border-primary':'border-border'}`}
-            onClick={()=>{setI(idx); setScale(1); setPos({x:0,y:0})}}>
-            <img src={src} alt="" className="h-full w-full object-cover" />
+      <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 gap-2">
+        {images.map((u, i) => (
+          <button key={u} onClick={() => { setIndex(i); setZoom(1); setPos({ x: 0, y: 0 }) }}
+                  className={`aspect-[4/3] overflow-hidden rounded ${i===index ? 'ring-2 ring-black/60' : 'ring-1 ring-black/10'}`}>
+            <img src={u} className="h-full w-full object-cover" alt="" loading="lazy" />
           </button>
         ))}
       </div>
-      <p className="subtle text-xs">Tip: pinch or drag to pan; use +/- to zoom.</p>
     </div>
   )
 }
