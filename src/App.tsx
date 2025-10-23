@@ -1,10 +1,10 @@
 import React, { useMemo, useState } from 'react'
-import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, Quote, Star } from 'lucide-react'
+import { Hammer, Image as ImageIcon, Phone, Mail, MapPin, Quote, Star, ChevronRight } from 'lucide-react'
 import { useData } from './lib/data'
-import SmartEstimator from './components/SmartEstimator'
 import ZoomGallery from './components/ZoomGallery'
 import Timeline from './components/Timeline'
 
+/** Small helpers */
 function Stars({ count = 5 }) {
   return (
     <div className="flex gap-1" aria-label={`${count} star rating`}>
@@ -12,21 +12,27 @@ function Stars({ count = 5 }) {
     </div>
   )
 }
-
-function Modal({
-  open, onClose, children,
-}: { open: boolean; onClose: () => void; children: React.ReactNode }) {
+function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: React.ReactNode }) {
   if (!open) return null
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="absolute inset-x-0 top-0 bottom-0 sm:inset-y-10 sm:mx-auto sm:max-w-4xl">
-        <div className="h-[100dvh] sm:h-auto bg-surface border border-border shadow-soft rounded-none sm:rounded-2xl overflow-auto">
+      <div className="absolute inset-x-0 top-0 bottom-0 sm:inset-y-10 sm:mx-auto sm:max-w-5xl">
+        <div className="h-[100dvh] sm:h-auto bg-white border border-[#e5e7eb] shadow-2xl rounded-none sm:rounded-2xl overflow-auto">
           <div className="p-4 sm:p-6">{children}</div>
         </div>
       </div>
     </div>
   )
+}
+
+/** Earthy palette (fallbacks if your utility classes don’t set colors) */
+const palette = {
+  cream: '#FAF7F2',
+  charcoal: '#1F2937',
+  copper: '#B87333', // accents
+  wood: '#8B5E34',
+  border: '#E5E7EB'
 }
 
 export default function App() {
@@ -36,8 +42,6 @@ export default function App() {
   const [category, setCategory] = useState<'All' | 'Kitchens' | 'Bathrooms' | 'Mudrooms' | 'Laundry' | 'Closets' | 'Furniture'>('All')
   const [material, setMaterial] = useState<'All' | 'Walnut' | 'Oak' | 'Ash' | 'Maple'>('All')
   const [viewer, setViewer] = useState<{ title: string, images: string[] } | null>(null)
-  const [showEstimator, setShowEstimator] = useState(false)
-  const [estimateSummary, setEstimateSummary] = useState('')
 
   const filtered = useMemo(() =>
     projects.filter((p: any) =>
@@ -47,74 +51,86 @@ export default function App() {
     ), [projects, category, material, query])
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen" style={{ background: palette.cream, color: palette.charcoal }}>
       {/* Top bar */}
-      <div className="sticky top-0 z-40 bg-background/90 backdrop-blur border-b border-border">
-        <div className="container-max py-3 flex items-center justify-between">
+      <div className="sticky top-0 z-40 border-b" style={{ background: 'rgba(250,247,242,.90)', backdropFilter: 'blur(6px)', borderColor: palette.border }}>
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="#" className="flex items-center gap-3 font-semibold">
-            {/* ABSOLUTE SITE PATH — works on GitHub Pages */}
+            {/* Absolute site path = GitHub Pages safe */}
             <img
               src="/OldSchool-Woodworking-Cabinetry/images/brand/logo.png"
               alt="Old School Woodworking"
-              className="h-7 w-auto"
+              className="h-8 w-auto"
             />
-            <span className="hidden sm:inline text-brand">{site?.name || 'Old School Woodworking'}</span>
+            <span className="hidden sm:inline" style={{ color: palette.copper }}>{site?.name || 'Old School Woodworking'}</span>
           </a>
 
           <nav className="hidden md:flex items-center gap-6 text-sm">
             <a href="#portfolio" className="hover:underline">Portfolio</a>
             <a href="#case-studies" className="hover:underline">Case Studies</a>
             <a href="#about" className="hover:underline">Story</a>
+            <a href="#services" className="hover:underline">Services</a>
             <a href="#testimonials" className="hover:underline">Reviews</a>
-            <a href="#blog" className="hover:underline">Blog</a>
+            <a href="#contact" className="hover:underline">Contact</a>
           </nav>
 
           <div className="flex items-center gap-2">
-            <button className="btn-outline rounded-2xl" onClick={() => setShowEstimator(true)}>Free AI Estimate</button>
-            <a className="btn-primary rounded-2xl" href="#contact">Get a Quote</a>
+            <a className="px-4 py-2 rounded-2xl border" style={{ borderColor: palette.border }} href="#contact">Free Consultation</a>
+            <a className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.copper }} href="#contact">Get a Quote</a>
           </div>
         </div>
       </div>
 
       {/* Hero */}
-      <section className="section grid md:grid-cols-2 gap-10 items-center">
+      <section className="max-w-7xl mx-auto px-4 py-12 grid md:grid-cols-2 gap-10 items-center">
         <div>
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-brand">{site?.tagline || 'Bespoke cabinetry & furniture'}</h1>
-          <p className="mt-4 subtle max-w-xl">
+          <h1 className="text-4xl md:text-5xl font-extrabold leading-tight" style={{ color: palette.wood }}>
+            {site?.tagline || 'Bespoke cabinetry & furniture'}
+          </h1>
+          <p className="mt-4 max-w-xl opacity-80">
             Handcrafted pieces tailored to your space. We design, build, and install cabinetry, furniture, and built-ins with premium materials and traditional joinery.
           </p>
           <div className="mt-6 flex flex-wrap gap-3">
-            <button className="btn-outline rounded-2xl" onClick={() => setShowEstimator(true)}>Free AI Estimate</button>
-            <a href="#portfolio" className="btn-primary rounded-2xl">View Portfolio</a>
+            <a href="#portfolio" className="px-4 py-2 rounded-2xl border" style={{ borderColor: palette.border }}>View Portfolio</a>
+            <a href="#about" className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.wood }}>Our Story</a>
           </div>
-          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm text-muted">
+          <div className="mt-6 flex flex-wrap items-center gap-6 text-sm opacity-80">
             <div className="flex items-center gap-2"><Phone className="w-4 h-4" />{site?.phone}</div>
             <div className="flex items-center gap-2"><Mail className="w-4 h-4" />{site?.email}</div>
             <div className="flex items-center gap-2"><MapPin className="w-4 h-4" />{site?.city}</div>
           </div>
         </div>
-        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-border shadow-soft">
-          {site?.heroUrl ? (
-            <img src={site.heroUrl} alt="Workshop" className="h-full w-full object-cover" />
-          ) : (
-            <div className="grid place-items-center h-full w-full bg-black/5"><ImageIcon className="w-12 h-12 opacity-30" /></div>
-          )}
+        <div className="relative aspect-[4/3] rounded-2xl overflow-hidden" style={{ border: `1px solid ${palette.border}`, boxShadow: '0 10px 30px rgba(0,0,0,.08)' }}>
+          {site?.heroUrl
+            ? <img src={site.heroUrl} alt="Workshop" className="h-full w-full object-cover" />
+            : <div className="grid place-items-center h-full w-full bg-black/5"><ImageIcon className="w-12 h-12 opacity-30" /></div>}
         </div>
       </section>
 
+      {/* Parallax band (subtle wood texture) */}
+      <section
+        className="h-56 md:h-72 bg-cover bg-center"
+        style={{
+          backgroundImage: `url(${site?.parallaxUrl || '/OldSchool-Woodworking-Cabinetry/images/brand/wood.jpg'})`,
+          backgroundAttachment: 'fixed'
+        }}
+        aria-hidden="true"
+      />
+
       {/* Portfolio */}
-      <section id="portfolio" className="section">
+      <section id="portfolio" className="max-w-7xl mx-auto px-4 py-12">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
           <div>
-            <h2 className="heading">Portfolio</h2>
-            <p className="subtle">Filter by room type, material, or search by name.</p>
+            <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Portfolio</h2>
+            <p className="opacity-80">Interactive gallery with zoom-on-click. Filter by room type, material, or search by name.</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <input className="input w-56" placeholder="Search projects…" value={query} onChange={(e) => setQuery(e.target.value)} />
-            <select className="input" value={category} onChange={(e) => setCategory(e.target.value as any)}>
+            <input className="px-3 py-2 rounded-xl border w-56" style={{ borderColor: palette.border }} placeholder="Search projects…"
+                   value={query} onChange={(e) => setQuery(e.target.value)} />
+            <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} value={category} onChange={(e) => setCategory(e.target.value as any)}>
               {['All', 'Kitchens', 'Bathrooms', 'Mudrooms', 'Laundry', 'Closets', 'Furniture'].map(c => <option key={c} value={c}>{c}</option>)}
             </select>
-            <select className="input" value={material} onChange={(e) => setMaterial(e.target.value as any)}>
+            <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} value={material} onChange={(e) => setMaterial(e.target.value as any)}>
               {['All', 'Walnut', 'Oak', 'Ash', 'Maple'].map(m => <option key={m} value={m}>{m}</option>)}
             </select>
           </div>
@@ -122,25 +138,27 @@ export default function App() {
 
         <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map((p: any) => (
-            <div key={p.id} className="card overflow-hidden">
-              <div className="relative aspect-[4/3] overflow-hidden">
-                {/* IMPORTANT: use the JSON URL as-is; do NOT wrap with any helper */}
-                <img src={p.images[0]} alt={p.title} className="h-full w-full object-cover" />
+            <div key={p.id} className="rounded-2xl overflow-hidden" style={{ border: `1px solid ${palette.border}`, boxShadow: '0 10px 25px rgba(0,0,0,.06)' }}>
+              <div className="relative aspect-[4/3] overflow-hidden group">
+                {/* IMPORTANT: use JSON URL as-is (GitHub Pages absolute or full https) */}
+                <img src={p.images[0]} alt={p.title} loading="lazy"
+                     className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]" />
               </div>
               <div className="p-5">
                 <div className="flex items-center justify-between">
                   <h3 className="font-semibold">{p.title}</h3>
-                  <span className="badge">{p.type}</span>
+                  <span className="px-2.5 py-1 text-xs rounded-full" style={{ background: '#eee' }}>{p.type}</span>
                 </div>
-                <p className="subtle mt-1">{p.blurb}</p>
+                <p className="opacity-80 mt-1">{p.blurb}</p>
                 <div className="flex flex-wrap gap-2 mt-3">
-                  {p.metrics?.map((m: string, i: number) => <span key={i} className="badge">{m}</span>)}
+                  {p.metrics?.map((m: string, i: number) => <span key={i} className="px-2 py-1 text-xs rounded-full" style={{ background: '#f5f5f5' }}>{m}</span>)}
                 </div>
                 <button
-                  className="btn-outline w-full mt-4 rounded-xl"
+                  className="w-full mt-4 px-4 py-2 rounded-xl border hover:opacity-90 flex items-center justify-center gap-2"
+                  style={{ borderColor: palette.border }}
                   onClick={() => setViewer({ title: p.title, images: p.images /* as-is */ })}
                 >
-                  View Photos
+                  View Photos <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
@@ -148,24 +166,24 @@ export default function App() {
         </div>
       </section>
 
-      {/* Case Studies (simple) */}
-      <section id="case-studies" className="bg-white/60 border-y border-border">
-        <div className="section">
-          <h2 className="heading">Case Studies</h2>
-          <p className="subtle">Story-driven breakdowns of featured builds.</p>
+      {/* Case Studies */}
+      <section id="case-studies" className="border-y" style={{ borderColor: palette.border, background: '#ffffffb3' }}>
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Case Studies</h2>
+          <p className="opacity-80">Narrative breakdowns: materials, techniques, and decisions.</p>
           <div className="mt-6 grid lg:grid-cols-2 gap-6">
             {projects.slice(0, 2).map((p: any) => (
-              <div key={p.id} className="card p-5">
+              <div key={p.id} className="rounded-2xl p-5" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
                 <div className="flex items-center gap-2">
                   <h3 className="font-semibold">{p.title}</h3>
-                  <span className="badge">{p.material || ''}</span>
+                  <span className="px-2 py-0.5 text-xs rounded-full" style={{ background: '#f5f5f5' }}>{p.material || ''}</span>
                 </div>
-                <p className="subtle mt-1">{p.blurb}</p>
+                <p className="opacity-80 mt-1">{p.blurb}</p>
                 <details className="mt-3"><summary className="cursor-pointer">Materials & Hardware</summary>
-                  <p className="subtle mt-2">Premium {p.material?.toLowerCase?.() || 'wood'}, FSC plywood, soft-close hardware.</p>
+                  <p className="opacity-80 mt-2">Premium {p.material?.toLowerCase?.() || 'wood'}, FSC plywood, soft-close hardware.</p>
                 </details>
                 <details className="mt-2"><summary className="cursor-pointer">Techniques</summary>
-                  <p className="subtle mt-2">Mortise/tenon joinery, precise edge-banding, spray-booth finishing.</p>
+                  <p className="opacity-80 mt-2">Mortise & tenon joinery, accurate edge-banding, pro spray-booth finishing.</p>
                 </details>
               </div>
             ))}
@@ -173,152 +191,154 @@ export default function App() {
         </div>
       </section>
 
-      {/* Parallax band */}
-      <section
-        className="h-56 md:h-72 bg-cover bg-center"
-        style={{ backgroundImage: `url(${site?.parallaxUrl || '/OldSchool-Woodworking-Cabinetry/images/brand/wood.jpg'})`, backgroundAttachment: 'fixed' }}
-        aria-hidden="true"
-      />
-
       {/* Story + Timeline */}
-      <section id="about" className="section">
+      <section id="about" className="max-w-7xl mx-auto px-4 py-12">
         <div className="grid lg:grid-cols-2 gap-8 items-start">
           <div>
-            <h2 className="heading">The Craftsman Story</h2>
-            <p className="subtle mt-3 max-w-prose">
+            <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>The Craftsman Story</h2>
+            <p className="opacity-80 mt-3 max-w-prose">
               Old School Woodworking is a small, family shop in Texas. We build pieces to last —
               carefully selected lumber, honest joinery, and finishes you can live with.
             </p>
             <div className="mt-5 grid sm:grid-cols-2 gap-3">
-              <div className="card p-4"><div className="font-semibold text-base text-brand">Values</div><div className="subtle">Craft, transparency, kindness.</div></div>
-              <div className="card p-4"><div className="font-semibold text-base text-brand">Guarantee</div><div className="subtle">2-year workmanship warranty.</div></div>
+              <div className="rounded-2xl p-4" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+                <div className="font-semibold" style={{ color: palette.wood }}>Values</div>
+                <div className="opacity-80">Craft, transparency, kindness.</div>
+              </div>
+              <div className="rounded-2xl p-4" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+                <div className="font-semibold" style={{ color: palette.wood }}>Guarantee</div>
+                <div className="opacity-80">2-year workmanship warranty.</div>
+              </div>
             </div>
           </div>
-          <div className="card p-5">
-            <h3 className="font-semibold mb-3">How We Work</h3>
+          <div className="rounded-2xl p-5" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+            <h3 className="font-semibold mb-3">Process Timeline</h3>
             <Timeline />
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="testimonials" className="bg-white/60 border-y border-border">
-        <div className="section">
-          <h2 className="heading">Client Reviews</h2>
+      {/* Services (simple, modern “broken grid” cards) */}
+      <section id="services" className="max-w-7xl mx-auto px-4 py-12">
+        <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Services</h2>
+        <div className="mt-6 grid md:grid-cols-3 gap-6">
+          {[
+            { name: 'Kitchens', blurb: 'Custom cabinetry, island builds, soft-close hardware.' },
+            { name: 'Built-ins', blurb: 'Media walls, bookshelves, mudroom lockers.' },
+            { name: 'Furniture', blurb: 'Tables, vanities, benches in premium hardwoods.' }
+          ].map((s) => (
+            <div key={s.name} className="rounded-2xl p-5 relative overflow-hidden"
+                 style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+              <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-10" style={{ background: palette.copper }} />
+              <div className="font-semibold">{s.name}</div>
+              <p className="opacity-80 mt-1">{s.blurb}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Testimonials sprinkled between sections */}
+      <section id="testimonials" className="border-y" style={{ borderColor: palette.border, background: '#ffffffb3' }}>
+        <div className="max-w-7xl mx-auto px-4 py-12">
+          <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Client Testimonials</h2>
           <div className="mt-6 grid md:grid-cols-3 gap-6">
-            {testimonials.map((t: any, i: number) => (
-              <div key={i} className="card p-5">
+            {(testimonials?.length ? testimonials : [
+              { name: 'Avery P.', rating: 5, quote: 'Flawless fit and finish. Communication was excellent.' },
+              { name: 'Jon D.', rating: 5, quote: 'The walnut kitchen changed our home. Worth every penny.' },
+              { name: 'Maya K.', rating: 5, quote: 'From design to install, they were meticulous and kind.' }
+            ]).map((t: any, i: number) => (
+              <div key={i} className="rounded-2xl p-5" style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
                 <div className="flex items-center justify-between">
-                  <div className="font-semibold text-base">{t.name}</div>
-                  <Stars count={t.rating as number} />
+                  <div className="font-semibold">{t.name}</div>
+                  <Stars count={t.rating || 5} />
                 </div>
-                <div className="flex items-start gap-2 subtle mt-2"><Quote className="w-4 h-4 mt-0.5" /> {t.quote}</div>
+                <div className="flex items-start gap-2 opacity-80 mt-2"><Quote className="w-4 h-4 mt-0.5" /> {t.quote}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Blog (minimal) */}
-      <section id="blog" className="section">
-        <div className="flex items-end justify-between">
-          <div>
-            <h2 className="heading">From the Shop Blog</h2>
-            <p className="subtle">Tips, process notes, and project updates.</p>
-          </div>
-        </div>
-        <div className="mt-6 grid md:grid-cols-3 gap-6">
-          {blog.map((b: any) => (
-            <div key={b.slug} className="card overflow-hidden">
-              <div className="aspect-video bg-black/5 overflow-hidden">
-                {b.cover
-                  ? <img src={b.cover} alt="" className="h-full w-full object-cover" />
-                  : <div className="grid place-items-center h-full w-full"><span className="subtle">Cover</span></div>}
-              </div>
-              <div className="p-5">
-                <div className="text-lg font-semibold">{b.title}</div>
-                <div className="subtle">{new Date(b.date).toLocaleDateString()}</div>
-                <p className="subtle mt-2">{b.excerpt}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Contact + Estimator */}
-      <section id="contact" className="section grid lg:grid-cols-2 gap-10 items-start">
+      {/* Contact + Free Consultation + Mozaik link */}
+      <section id="contact" className="max-w-7xl mx-auto px-4 py-12 grid lg:grid-cols-2 gap-10 items-start">
         <div>
-          <h2 className="heading">Request a Free Consultation</h2>
-          <p className="subtle">Tell us about your project. We usually reply within one business day.</p>
-
-          {estimateSummary && (
-            <div className="card p-4 mb-4">
-              <div className="text-sm subtle mb-2">AI Estimate summary (you can edit before sending):</div>
-              <textarea
-                className="textarea min-h-[100px]"
-                name="estimate"
-                value={estimateSummary}
-                onChange={(e) => setEstimateSummary(e.target.value)}
-              />
-            </div>
-          )}
+          <h2 className="text-2xl font-bold" style={{ color: palette.wood }}>Free Consultation</h2>
+          <p className="opacity-80">Tell us about your project. We usually reply within one business day.</p>
 
           <form className="mt-6 grid gap-4"
                 method="POST"
                 action={site?.formspreeEndpoint || undefined}
                 onSubmit={(e) => { if (!site?.formspreeEndpoint) { e.preventDefault(); alert('Thanks! (Formspree not set)') } }}>
             <div className="grid sm:grid-cols-2 gap-4">
-              <input required className="input" name="name" placeholder="Full name" />
-              <input required type="email" className="input" name="email" placeholder="Email" />
+              <input required className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="name" placeholder="Full name" />
+              <input required type="email" className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="email" placeholder="Email" />
             </div>
             <div className="grid sm:grid-cols-2 gap-4">
-              <input className="input" name="phone" placeholder="Phone (optional)" />
-              <input className="input" name="city" placeholder="City" />
+              <input className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="phone" placeholder="Phone (optional)" />
+              <input className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="city" placeholder="City" />
             </div>
             <div className="grid sm:grid-cols-3 gap-4">
-              <select className="input" name="project_type" defaultValue="Kitchens">
+              <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="project_type" defaultValue="Kitchens">
                 {['Kitchens', 'Bathrooms', 'Mudrooms', 'Laundry', 'Closets', 'Furniture'].map(x => <option key={x}>{x}</option>)}
               </select>
-              <select className="input" name="budget" defaultValue="$10k–$20k">
+              <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="budget" defaultValue="$10k–$20k">
                 {['<$5k', '$5k–$10k', '$10k–$20k', '$20k–$40k', '$40k+'].map(x => <option key={x}>{x}</option>)}
               </select>
-              <select className="input" name="timeline" defaultValue="Flexible">
+              <select className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }} name="timeline" defaultValue="Flexible">
                 {['ASAP (4–6 weeks)', 'Soon (2–3 months)', 'Flexible'].map(x => <option key={x}>{x}</option>)}
               </select>
             </div>
 
-            <input className="input" name="mozaik_link" placeholder="Link to Mozaik files (Drive/Dropbox)" />
-            <textarea required className="textarea min-h-[120px]" name="details"
-                      placeholder="Describe your project, dimensions, finishes, timeline, budget range…"></textarea>
+            {/* Mozaik integration: simple link input your client can paste */}
+            <input className="px-3 py-2 rounded-xl border" style={{ borderColor: palette.border }}
+                   name="mozaik_link" placeholder="Link to Mozaik files (Drive/Dropbox)" />
+
+            <textarea required className="px-3 py-2 rounded-xl border min-h-[120px]" style={{ borderColor: palette.border }}
+                      name="details" placeholder="Describe your project, dimensions, finishes, timeline, budget range…"></textarea>
+
             <div className="flex items-center justify-between">
-              <div className="subtle">Prefer a quick ballpark? Try the “Free AI Estimate”.</div>
-              <button className="btn-primary rounded-2xl">Send Request</button>
+              <div className="opacity-80 text-sm">Prefer a quick ballpark first? Open any project, tap <em>View Photos</em> then contact us.</div>
+              <button className="px-4 py-2 rounded-2xl text-white" style={{ background: palette.copper }}>Send</button>
             </div>
           </form>
         </div>
-        <div className="card p-5 grid gap-3 text-sm text-muted">
-          <div className="text-foreground font-semibold text-base">Why clients choose us</div>
+
+        <div className="rounded-2xl p-5 grid gap-3 text-sm opacity-90"
+             style={{ border: `1px solid ${palette.border}`, background: 'white' }}>
+          <div className="font-semibold" style={{ color: palette.wood }}>Why clients choose us</div>
           <div>• Transparent pricing & schedule</div>
           <div>• Mozaik 3D design support</div>
           <div>• Workmanship warranty</div>
           <div>• Insured & background-checked</div>
+
+          {/* Social links if present in site.json */}
+          {(site?.social && Object.keys(site.social).length > 0) && (
+            <>
+              <div className="mt-2 font-semibold" style={{ color: palette.wood }}>Follow</div>
+              <div className="flex flex-wrap gap-3">
+                {site.social.instagram && <a className="underline" href={site.social.instagram} target="_blank">Instagram</a>}
+                {site.social.facebook && <a className="underline" href={site.social.facebook} target="_blank">Facebook</a>}
+                {site.social.tiktok && <a className="underline" href={site.social.tiktok} target="_blank">TikTok</a>}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border bg-white/70">
-        <div className="section grid md:grid-cols-3 gap-6 text-sm">
+      <footer className="border-t" style={{ borderColor: palette.border, background: '#ffffffb3' }}>
+        <div className="max-w-7xl mx-auto px-4 py-8 grid md:grid-cols-3 gap-6 text-sm">
           <div>
             <div className="font-semibold flex items-center gap-2"><Hammer className="w-4 h-4" /> {site?.name || 'Old School Woodworking'}</div>
-            <p className="subtle mt-2">Custom cabinetry, furniture, and built-ins for {site?.city || 'your area'}.</p>
+            <p className="opacity-80 mt-2">Custom cabinetry, furniture, and built-ins for {site?.city || 'your area'}.</p>
           </div>
           <div className="grid sm:grid-cols-2 md:grid-cols-1 gap-3">
             <a href="#portfolio" className="hover:underline">Portfolio</a>
             <a href="#about" className="hover:underline">Story</a>
-            <a href="#blog" className="hover:underline">Blog</a>
+            <a href="#services" className="hover:underline">Services</a>
             <a href="#contact" className="hover:underline">Get a Quote</a>
           </div>
-          <div className="text-muted">
+          <div className="opacity-80">
             <div className="flex items-center gap-2"><Phone className="w-4 h-4" />{site?.phone}</div>
             <div className="flex items-center gap-2"><Mail className="w-4 h-4" />{site?.email}</div>
             <div className="flex items-center gap-2"><MapPin className="w-4 h-4" />{site?.city}</div>
@@ -329,19 +349,6 @@ export default function App() {
       {/* Photo viewer */}
       <Modal open={!!viewer} onClose={() => setViewer(null)}>
         {viewer && <ZoomGallery title={viewer.title} images={viewer.images} />}
-      </Modal>
-
-      {/* Estimator modal */}
-      <Modal open={showEstimator} onClose={() => setShowEstimator(false)}>
-        <SmartEstimator
-          onClose={() => setShowEstimator(false)}
-          onUse={(summary: string) => {
-            setEstimateSummary(summary)
-            setShowEstimator(false)
-            const el = document.getElementById('contact')
-            if (el) el.scrollIntoView({ behavior: 'smooth' })
-          }}
-        />
       </Modal>
     </div>
   )
